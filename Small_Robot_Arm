@@ -1,0 +1,127 @@
+#include <Servo.h>
+
+Servo base; //min: 0, max(arm in line with base servo): 105
+Servo shoulder; //min: 0, max(shoulder forward): 85 DEPENDENT
+Servo elbow; //min: 0, max(elbow up): 100 DEPENDENT
+Servo gripper; //min: 0, max(gripper closed): 60 DEPENDENT
+
+const int moveInterval = 15; // Insert larger values for slower servo movement
+
+void setup() {
+  base.attach(9);
+  base.write(95);
+
+  shoulder.attach(10);
+  shoulder.write(0);
+
+  elbow.attach(11);
+  elbow.write(65);
+
+  gripper.attach(12);
+  gripper.write(15);
+
+  delay(1000);
+}
+
+void loop() {
+  /*
+  
+  Hello! This is where you change numbers to make your arm move! Change these numbers ever so slighly to get to 
+  the target angle, as the max angle of the joints can change depending on what the other servo angles are. Have fun!
+  
+  reference: (base, shoulder, elbow, gripper)
+
+  */
+
+  moveServos(50, 40, 20, 0); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(50, 70, 20, 0); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(50, 70, 20, 40); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(95, 65, 30, 40); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(95, 65, 30, 0); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(95, 30, 35, 0); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(20, 60, 10, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(20, 60, 10, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(20, 80, 30, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(20, 80, 25, 70); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(95, 50, 80, 70); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(95, 50, 80, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(95, 0, 65, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(100); // Robot will wait
+  gripper.write(40);
+  delay(200);
+  gripper.write(15);
+  delay(200);
+  gripper.write(40);
+  delay(200);
+  gripper.write(15);
+  delay(100);
+  moveServos(95, 45, 65, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(95, 0, 65, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(100); // Robot will wait
+  moveServos(95, 0, 90, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(95, 0, 65, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(100); // Robot will wait
+  moveServos(60, 0, 65, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(10); // Robot will wait
+  moveServos(95, 0, 65, 15); // Customize your robot's movements here. Add as many as you'd like
+  delay(100); // Robot will wait
+  exit(0); // Code will stop, remove this line to repeat movements
+}
+
+// All code below this point is nessesary for smoother servo movements using interpolation. You shouldn't have to change this but feel free!
+void moveServos(int baseTarget, int shoulderTarget, int elbowTarget, int gripperTarget) {
+  int baseCurrent = base.read();
+  int shoulderCurrent = shoulder.read();
+  int elbowCurrent = elbow.read();
+  int gripperCurrent = gripper.read();
+
+  while (baseCurrent != baseTarget || shoulderCurrent != shoulderTarget || elbowCurrent != elbowTarget || gripperCurrent != gripperTarget) {
+    // base movement
+    if (baseCurrent < baseTarget) {
+      baseCurrent++;
+    } else if (baseCurrent > baseTarget) {
+      baseCurrent--;
+    }
+    base.write(baseCurrent);
+
+    // shoulder movement
+    if (shoulderCurrent < shoulderTarget) {
+      shoulderCurrent++;
+    } else if (shoulderCurrent > shoulderTarget) {
+      shoulderCurrent--;
+    }
+    shoulder.write(shoulderCurrent);
+
+    // elbow movement
+    if (elbowCurrent < elbowTarget) {
+      elbowCurrent++;
+    } else if (elbowCurrent > elbowTarget) {
+      elbowCurrent--;
+    }
+    elbow.write(elbowCurrent);
+
+    // gripper movement
+    if (gripperCurrent < gripperTarget) {
+      gripperCurrent++;
+    } else if (gripperCurrent > gripperTarget) {
+      gripperCurrent--;
+    }
+    gripper.write(gripperCurrent);
+
+    delay(moveInterval);
+  }
+}
